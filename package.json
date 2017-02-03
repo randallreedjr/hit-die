@@ -1,0 +1,15 @@
+{
+  "name": "hit-die",
+  "version": "1.0.0",
+  "description": "roll20 API script to use a hit die",
+  "main": "index.js",
+  "scripts": {
+    "test": "karma"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/randallreedjr/hit-die.git"
+  },
+  "author": "Randall Reed, Jr.",
+  "license": "MIT"
+}
