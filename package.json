@@ -4,12 +4,24 @@
   "description": "roll20 API script to use a hit die",
   "main": "index.js",
   "scripts": {
-    "test": "karma"
+    "test": "./node_modules/karma/bin/karma start"
   },
   "repository": {
     "type": "git",
     "url": "https://www.github.com/randallreedjr/hit-die.git"
   },
   "author": "Randall Reed, Jr.",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+     "babel-core": "^6.17.0",
+     "babel-loader": "^6.2.5",
+     "babel-preset-es2015": "^6.16.0",
+     "jasmine-core": "^2.5.2",
+     "karma": "^1.3.0",
+     "karma-jasmine": "^1.0.2",
+     "karma-mocha-reporter": "^2.2.0",
+     "karma-phantomjs-launcher": "^1.0.2",
+     "karma-webpack": "^1.8.0",
+     "webpack": "^1.13.2"
+  }
 }
