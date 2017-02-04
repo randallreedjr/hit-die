@@ -1,0 +1,2 @@
+function findObjs() {}
+function sendChat() {}
