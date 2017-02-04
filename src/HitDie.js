@@ -30,17 +30,15 @@ function processChatMessage(msg) {
       sendChat(msg.who, '/w ' + playerName + ' !hitdie command must be used as a character');
       return false;
     } else if (character) {
-      log(character);
       sendChat(msg.who, '/em uses a hit die');
       sendChat(msg.who, '/roll 1d6');
-      log(character.get('HP'));
       return true;
     }
   }
   return null;
 }
 
-
-// on("chat:message", function(msg) {
-//   processChatMessage(msg);
-// });
+// Comment out on chat:message event handler for tests
+on("chat:message", function(msg) {
+  processChatMessage(msg);
+});

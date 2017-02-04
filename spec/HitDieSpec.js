@@ -16,23 +16,61 @@ describe("Hit Die", function() {
   });
 
   describe('when receiving hitdie api message', function() {
-    beforeEach(function() {
-      spyOn(window, 'findObjs').and.callFake(function(searchParams) {
-        return [searchParams.type === "player"]
+    describe('when message comes from player', function() {
+      beforeEach(function() {
+        spyOn(window, 'findObjs').and.callFake(function(searchParams) {
+          return [searchParams.type === "player"]
+        });
+        spyOn(window, 'sendChat')
       });
-      spyOn(window, 'sendChat')
+
+      it('returns false', function() {
+        var result = processChatMessage({type: 'api', content: '!hitdie', who: 'Some Player'});
+
+        expect(result).toEqual(false);
+      });
+
+      it('whispers error message to player', function() {
+        processChatMessage({type: 'api', content: '!hitdie', who: 'Some Player'});
+
+        expect(window.sendChat).toHaveBeenCalledWith('Some Player', '/w Some Player !hitdie command must be used as a character');
+      });
     });
 
-    it('returns false if message is from player', function() {
-      var result = processChatMessage({type: 'api', content: '!hitdie', who: 'Some Player'});
+    describe('when message comes from GM', function() {
+      beforeEach(function() {
+        spyOn(window, 'findObjs').and.callFake(function(searchParams) {
+          return [searchParams.type === "player"]
+        });
+        spyOn(window, 'sendChat')
+      });
 
-      expect(result).toEqual(false);
+      it('returns false', function() {
+        var result = processChatMessage({type: 'api', content: '!hitdie', who: 'Some Player (GM)'});
+
+        expect(result).toEqual(false);
+      });
+
+      it('whispers error message to player', function() {
+        processChatMessage({type: 'api', content: '!hitdie', who: 'Some Player'});
+
+        expect(window.sendChat).toHaveBeenCalledWith('Some Player', '/w Some Player !hitdie command must be used as a character');
+      });
     });
 
-    it('whispers error message if message is from player', function() {
-      processChatMessage({type: 'api', content: '!hitdie', who: 'Some Player'});
+    describe('when message comes from character', function() {
+      beforeEach(function() {
+        spyOn(window, 'findObjs').and.callFake(function(searchParams) {
+          return [searchParams.type === "character"]
+        });
+        spyOn(window, 'sendChat')
+      });
 
-      expect(window.sendChat).toHaveBeenCalledWith('Some Player', '/w Some Player !hitdie command must be used as a character');
+      it('returns true', function() {
+        var result = processChatMessage({type: 'api', content: '!hitdie', who: 'Character'});
+
+        expect(result).toEqual(true);
+      });
     });
   });
 });
