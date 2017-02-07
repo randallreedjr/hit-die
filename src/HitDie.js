@@ -34,13 +34,18 @@ function fullHp(characterId) {
 }
 
 function availableHitDie(characterId) {
-  if(getAttrByName(characterId, 'hd_d12') && getAttrByName(characterId, 'hd_d12').toNumber > 0) {
+  var currentD12 = parseInt(getAttrByName(characterId, 'hd_d12'));
+  var currentD10 = parseInt(getAttrByName(characterId, 'hd_d10'));
+  var currentD8 = parseInt(getAttrByName(characterId, 'hd_d8'));
+  var currentD6 = parseInt(getAttrByName(characterId, 'hd_d6'));
+
+  if(currentD12 > 0) {
     return 'd12';
-  } else if(getAttrByName(characterId, 'hd_d10') && getAttrByName(characterId, 'hd_d10').toNumber > 0) {
+  } else if(currentD10 > 0) {
     return 'd10';
-  } else if(getAttrByName(characterId, 'hd_d8') && getAttrByName(characterId, 'hd_d8').toNumber > 0) {
+  } else if(currentD8 > 0) {
     return 'd8';
-  } else if(getAttrByName(characterId, 'hd_d6') && getAttrByName(characterId, 'hd_d6').toNumber > 0) {
+  } else if(currentD6 > 0) {
     return 'd6';
   }
   return '';

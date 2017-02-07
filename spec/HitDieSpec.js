@@ -94,8 +94,8 @@ describe("Hit Die", function() {
       describe('when character HP is below max', function() {
         beforeEach(function() {
           spyOn(window, 'getAttrByName').and.callFake(function(character_id, attr, modifier) {
-            if (attr == 'HP') {
-              if (modifier == 'max') {
+            if (attr === 'HP') {
+              if (modifier === 'max') {
                 return 31;
               } else {
                 return 30;
@@ -109,11 +109,111 @@ describe("Hit Die", function() {
 
           expect(result).toEqual(true);
         });
+      });
 
-        it('uses a hit die', function() {
-          // if there are multiple hit die, what then? use highest? lowest?
+      describe('when d12 is highest available', function() {
+        beforeEach(function() {
+          spyOn(window, 'getAttrByName').and.callFake(function(character_id, attr, modifier) {
+            if (attr === 'HP') {
+              if (modifier === 'max') {
+                return 31;
+              } else {
+                return 30;
+              }
+            } else if (attr === 'hd_d12') {
+              return '1';
+            }
+          });
         });
-      })
+
+        it('uses a d12 hit die', function() {
+          // if there are multiple hit die, what then? use highest? lowest?
+          processChatMessage({type: 'api', content: '!hitdie', who: 'Character'});
+
+          expect(window.sendChat).toHaveBeenCalledWith('hitdie', '/roll 1d12 Character');
+        });
+      });
+
+      describe('when d10 is highest available', function() {
+        beforeEach(function() {
+          spyOn(window, 'getAttrByName').and.callFake(function(character_id, attr, modifier) {
+            if (attr === 'HP') {
+              if (modifier === 'max') {
+                return 31;
+              } else {
+                return 30;
+              }
+            } else if (attr === 'hd_d12') {
+              return undefined;
+            } else if (attr === 'hd_d10') {
+              return "1";
+            }
+          });
+        });
+
+        it('uses a d10 hit die', function() {
+          // if there are multiple hit die, what then? use highest? lowest?
+          processChatMessage({type: 'api', content: '!hitdie', who: 'Character'});
+
+          expect(window.sendChat).toHaveBeenCalledWith('hitdie', '/roll 1d10 Character');
+        });
+      });
+
+      describe('when d8 is highest available', function() {
+        beforeEach(function() {
+          spyOn(window, 'getAttrByName').and.callFake(function(character_id, attr, modifier) {
+            if (attr === 'HP') {
+              if (modifier === 'max') {
+                return 31;
+              } else {
+                return 30;
+              }
+            } else if (attr === 'hd_d12') {
+              return undefined;
+            } else if (attr === 'hd_d10') {
+              return "0";
+            } else if (attr === 'hd_d8') {
+              return "2";
+            }
+          });
+        });
+
+        it('uses a d8 hit die', function() {
+          // if there are multiple hit die, use highest
+          processChatMessage({type: 'api', content: '!hitdie', who: 'Character'});
+
+          expect(window.sendChat).toHaveBeenCalledWith('hitdie', '/roll 1d8 Character');
+        });
+      });
+
+      describe('when d6 is highest available', function() {
+        beforeEach(function() {
+          spyOn(window, 'getAttrByName').and.callFake(function(character_id, attr, modifier) {
+            if (attr === 'HP') {
+              if (modifier === 'max') {
+                return 31;
+              } else {
+                return 30;
+              }
+            } else if (attr === 'hd_d12') {
+              return undefined;
+            } else if (attr === 'hd_d10') {
+              return undefined;
+            } else if (attr === 'hd_d8') {
+              return "0";
+            } else if (attr === 'hd_d6') {
+              return "1";
+            }
+          });
+        });
+
+        it('uses a d6 hit die', function() {
+          // if there are multiple hit die, use highest
+          processChatMessage({type: 'api', content: '!hitdie', who: 'Character'});
+
+          expect(window.sendChat).toHaveBeenCalledWith('hitdie', '/roll 1d6 Character');
+        });
+      });
     });
   });
 });
