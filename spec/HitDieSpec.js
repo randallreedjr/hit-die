@@ -61,16 +61,59 @@ describe("Hit Die", function() {
     describe('when message comes from character', function() {
       beforeEach(function() {
         spyOn(window, 'findObjs').and.callFake(function(searchParams) {
-          return [searchParams.type === "character"]
+          if (searchParams.type === "character") {
+            return [{ get: function() {}}]
+          } else {
+            return [false]
+          }
         });
-        spyOn(window, 'sendChat')
+        spyOn(window, 'sendChat');
       });
 
-      it('returns true', function() {
-        var result = processChatMessage({type: 'api', content: '!hitdie', who: 'Character'});
+      describe('when character HP is at max', function() {
+        beforeEach(function() {
+          spyOn(window, 'getAttrByName').and.callFake(function(attrs) {
 
-        expect(result).toEqual(true);
+            if (attrs && attrs[1] == 'HP') {
+              if (attrs[2] == 'max') {
+                return 30;
+              } else {
+                return 30;
+              }
+            }
+          });
+        });
+
+        it('returns false', function() {
+          var result = processChatMessage({type: 'api', content: '!hitdie', who: 'Character'});
+
+          expect(result).toEqual(false);
+        });
       });
+
+      describe('when character HP is below max', function() {
+        beforeEach(function() {
+          spyOn(window, 'getAttrByName').and.callFake(function(character_id, attr, modifier) {
+            if (attr == 'HP') {
+              if (modifier == 'max') {
+                return 31;
+              } else {
+                return 30;
+              }
+            }
+          });
+        });
+
+        it('returns true', function() {
+          var result = processChatMessage({type: 'api', content: '!hitdie', who: 'Character'});
+
+          expect(result).toEqual(true);
+        });
+
+        it('uses a hit die', function() {
+          // if there are multiple hit die, what then? use highest? lowest?
+        });
+      })
     });
   });
 });
